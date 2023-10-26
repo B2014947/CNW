@@ -1,10 +1,30 @@
 const knex = require("./knexConfig");
 
+// check_login
+async function checkLogin(username, passwd) {
+  try {
+    const user = await knex("users")
+      .select("*")
+      .where("username", username)
+      .andWhere("password", passwd)
+      .first();
+    if (!user) {
+      return null;
+    }
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // create user with JSON
 async function createUser(userData) {
   try {
     const [id] = await knex("users").insert(userData);
-    return { id, ...userData };
+    return {
+      id,
+      ...userData,
+    };
   } catch (error) {
     throw error;
   }
@@ -57,6 +77,7 @@ async function deleteUser(userId) {
 }
 
 module.exports = {
+  checkLogin,
   createUser,
   getUserById,
   getusers,

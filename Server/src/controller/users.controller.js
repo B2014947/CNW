@@ -1,6 +1,30 @@
 const userService = require("../services/users.service");
 const ApiError = require("../api-error");
 
+async function checkuserlogin(req, res, next) {
+  const username = req.body.username;
+  const passwd = req.body.password;
+
+  if (!username) {
+    return next(new ApiError(400, "Username can not be empty!"));
+  } else if (!passwd) {
+    return next(new ApiError(400, "Password can not be empty!"));
+  }
+  try {
+    const checklogin = await userService.checkLogin(username, passwd);
+    if (!checklogin) {
+      return next(new ApiError(404, "Username or password does not exist!"));
+      // The email address or mobile number you entered isn't connected to an account.
+    }
+    return res.json({
+      message: `Login success`,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new ApiError(500, "An error occurred while login"));
+  }
+}
+
 async function createUser(req, res, next) {
   if (!req.body?.username) {
     return next(new ApiError(400, "Username can not be empty!"));
@@ -94,6 +118,7 @@ async function deleteUser(req, res, next) {
 }
 
 module.exports = {
+  checkuserlogin,
   createUser,
   getUsers,
   getUserById,
