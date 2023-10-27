@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fuild">
+  <div class="container-fluid">
     <div class="row" style="background-color: aquamarine; padding: 1rem">
       <!-- logo -->
       <div class="col-sm-9 d-flex align-items-center justify-content-sm-start">
