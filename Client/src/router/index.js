@@ -1,25 +1,7 @@
-import { createWebHistory, createRouter } from "vue-router";
-import adminPage from "@/layouts/admin.vue";
+import { createRouter, createWebHistory } from "vue-router";
+import admin from "./admin";
 
-const routes = [
-  {
-    path: "/admin",
-    component: adminPage,
-    children: [
-      {
-        path: "users",
-        name: "admin-users",
-        component: () => import("../View/admin/users/index.vue"),
-      },
-    ],
-  },
-
-  {
-    path: "/:pathMatch(.*)*",
-    name: "notfound",
-    component: () => import("../View/notFound.vue"),
-  },
-];
+const routes = [...admin];
 
 const router = createRouter({
   history: createWebHistory(),

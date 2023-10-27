@@ -1,6 +1,6 @@
 <template>
-  <div>
-    Đây là layouts Admin
+  <dir>
+    <h1>Đây là Layouts Admin</h1>
     <router-view></router-view>
-  </div>
+  </dir>
 </template>
