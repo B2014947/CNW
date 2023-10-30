@@ -25,8 +25,7 @@ async function createUser(userData, userDetailsData) {
     transaction = await knex.transaction();
 
     const [userId] = await transaction("users").insert(userData);
-    userDetailsData.UserID = userId; // Sử dụng ID của người dùng trong bảng Users
-
+    userDetailsData.UserID = userId;
     const [userDetailsId] = await transaction("userdetails").insert(
       userDetailsData
     );

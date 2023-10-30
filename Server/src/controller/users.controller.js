@@ -39,14 +39,12 @@ async function createUser(req, res, next) {
     const userData = {
       username: req.body.username,
       password: req.body.password,
-      // Thêm các trường dữ liệu khác nếu cần
     };
 
     const userDetailsData = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      // Thêm các trường dữ liệu khác nếu cần
     };
 
     const user = await userService.createUser(userData, userDetailsData);
