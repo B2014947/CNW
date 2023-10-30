@@ -18,14 +18,31 @@ async function checkLogin(username, passwd) {
 }
 
 // create user with JSON
-async function createUser(userData) {
+async function createUser(userData, userDetailsData) {
+  let transaction;
+
   try {
-    const [id] = await knex("users").insert(userData);
+    transaction = await knex.transaction();
+
+    const [userId] = await transaction("users").insert(userData);
+    userDetailsData.UserID = userId; // Sử dụng ID của người dùng trong bảng Users
+
+    const [userDetailsId] = await transaction("userdetails").insert(
+      userDetailsData
+    );
+
+    await transaction.commit();
+
     return {
-      id,
+      userId,
+      userDetailsId,
       ...userData,
+      ...userDetailsData,
     };
   } catch (error) {
+    if (transaction) {
+      await transaction.rollback();
+    }
     throw error;
   }
 }

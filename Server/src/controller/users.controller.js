@@ -26,11 +26,30 @@ async function checkuserlogin(req, res, next) {
 }
 
 async function createUser(req, res, next) {
-  if (!req.body?.username) {
-    return next(new ApiError(400, "Username can not be empty!"));
+  if (
+    !req.body?.username ||
+    !req.body?.password ||
+    !req.body?.firstName ||
+    !req.body?.lastName ||
+    !req.body?.email
+  ) {
+    return next(new ApiError(400, "All required fields must be provided."));
   }
   try {
-    const user = await userService.createUser(req.body);
+    const userData = {
+      username: req.body.username,
+      password: req.body.password,
+      // Thêm các trường dữ liệu khác nếu cần
+    };
+
+    const userDetailsData = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      // Thêm các trường dữ liệu khác nếu cần
+    };
+
+    const user = await userService.createUser(userData, userDetailsData);
     return res.send(user);
   } catch (error) {
     console.log(error);
