@@ -1,4 +1,5 @@
 const admin = [
+  // url for admin page
   {
     path: "/admin",
     component: () => import("../layouts/admin.vue"),
@@ -19,12 +20,6 @@ const admin = [
         component: () => import("../pages/admin/settings/index.vue"),
       },
     ],
-  },
-
-  {
-    path: "/:pathMatch(.*)*",
-    name: "notfound",
-    component: () => import("../pages/NotFound.vue"),
   },
 ];
 

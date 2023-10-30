@@ -19,6 +19,7 @@ import theMenu from "../components/Ad_theMenu.vue";
         </div>
 
         <div class="col-sm-9">
+          <!-- render route children -->
           <router-view></router-view>
         </div>
       </div>
