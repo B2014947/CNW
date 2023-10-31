@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router/index";
 import axios from "axios";
 window.axios = axios;
-import { List, Menu } from "ant-design-vue";
+import { List, Menu, Card, Table } from "ant-design-vue";
 import { createPinia } from "pinia";
 
 import "bootstrap/dist/css/bootstrap-grid.min.css";
@@ -22,5 +22,7 @@ app.use(router);
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(List);
 app.use(Menu);
+app.use(Card);
+app.use(Table);
 app.use(createPinia());
 app.mount("#app");
