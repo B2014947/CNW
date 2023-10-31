@@ -6,9 +6,9 @@
       </router-link>
     </a-menu-item>
 
-    <a-menu-item key="admin-roles">
-      <router-link :to="{ name: 'admin-roles' }">
-        <span>Roles</span>
+    <a-menu-item key="admin-products">
+      <router-link :to="{ name: 'admin-products' }">
+        <span>Products</span>
       </router-link>
     </a-menu-item>
 
