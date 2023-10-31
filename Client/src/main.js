@@ -1,6 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router/index";
+import axios from "axios";
+window.axios = axios;
 import { List, Menu } from "ant-design-vue";
 import { createPinia } from "pinia";
 
