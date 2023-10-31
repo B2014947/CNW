@@ -56,23 +56,19 @@ async function createUser(req, res, next) {
   }
 }
 
-async function getUserById(req, res, next) {
-  const user_id = req.params.user_id || req.body.user_id;
-
-  if (!user_id) {
-    return next(new ApiError(400, "ID user can not be empty!"));
-  }
+async function getUserByUsername(req, res, next) {
+  const username = req.params.username;
   try {
-    const found_user = await userService.getUserById(user_id);
-    if (!found_user) {
-      return next(new ApiError(404, `ID user: ${user_id} does not exist!`));
+    const user = await userService.getUserByUsername(username);
+
+    if (user) {
+      return res.send(user);
+    } else {
+      return res.status(404).json({ message: "User not found" });
     }
-    return res.send(found_user);
   } catch (error) {
-    console.log(error);
-    return next(
-      new ApiError(500, "An error occurred while fetching user by ID")
-    );
+    console.error(error);
+    return next(new ApiError(500, "An error occurred while fetching user"));
   }
 }
 
@@ -86,60 +82,60 @@ async function getUsers(req, res, next) {
   }
 }
 
-async function updatedUser(req, res, next) {
-  const user_id = req.params.user_id || req.body.user_id;
+// async function updatedUser(req, res, next) {
+//   const user_id = req.params.user_id || req.body.user_id;
 
-  if (!user_id) {
-    return next(new ApiError(400, "ID user can not be empty!"));
-  }
+//   if (!user_id) {
+//     return next(new ApiError(400, "ID user can not be empty!"));
+//   }
 
-  try {
-    const updatedUser = await userService.updateUser(user_id, req.body);
-    if (!updatedUser) {
-      return next(new ApiError(404, `ID user ${user_id} dose not exist!`));
-    }
-    return res.send(updatedUser);
-  } catch (error) {
-    console.log(error);
-    return next(
-      new ApiError(
-        500,
-        `An error occurred while updating user with ID user is ${user_id}`
-      )
-    );
-  }
-}
+//   try {
+//     const updatedUser = await userService.updateUser(user_id, req.body);
+//     if (!updatedUser) {
+//       return next(new ApiError(404, `ID user ${user_id} dose not exist!`));
+//     }
+//     return res.send(updatedUser);
+//   } catch (error) {
+//     console.log(error);
+//     return next(
+//       new ApiError(
+//         500,
+//         `An error occurred while updating user with ID user is ${user_id}`
+//       )
+//     );
+//   }
+// }
 
-async function deleteUser(req, res, next) {
-  const user_id = req.params.user_id || req.body.user_id;
-  if (!user_id) {
-    return next(new ApiError(400, "ID user can not be empty!"));
-  }
-  try {
-    const checkID_user = await userService.getUserById(user_id);
-    if (checkID_user) {
-      await userService.deleteUser(user_id);
-      return res.json({
-        message: `Deleted user whose ID is: ${user_id} success`,
-      });
-    }
-    return next(new ApiError(404, `ID user: ${user_id} does not exist!`));
-  } catch (error) {
-    console.log(error);
-    return next(
-      new ApiError(
-        500,
-        `An error occurred while delete user with ID user is ${user_id}`
-      )
-    );
-  }
-}
+// async function deleteUser(req, res, next) {
+//   const user_id = req.params.user_id || req.body.user_id;
+//   if (!user_id) {
+//     return next(new ApiError(400, "ID user can not be empty!"));
+//   }
+//   try {
+//     const checkID_user = await userService.getUserById(user_id);
+//     if (checkID_user) {
+//       await userService.deleteUser(user_id);
+//       return res.json({
+//         message: `Deleted user whose ID is: ${user_id} success`,
+//       });
+//     }
+//     return next(new ApiError(404, `ID user: ${user_id} does not exist!`));
+//   } catch (error) {
+//     console.log(error);
+//     return next(
+//       new ApiError(
+//         500,
+//         `An error occurred while delete user with ID user is ${user_id}`
+//       )
+//     );
+//   }
+// }
 
 module.exports = {
   checkuserlogin,
   createUser,
   getUsers,
-  getUserById,
-  updatedUser,
-  deleteUser,
+  getUserByUsername,
+  // updatedUser,
+  // deleteUser,
 };

@@ -9,13 +9,13 @@ router.post("/create", userController.createUser);
 
 router.get("/getusers", userController.getUsers);
 
-router.get("/getuserbyid/:user_id", userController.getUserById);
-router.get("/getuserbyid/", userController.getUserById);
+router.get("/getuserbyusername/:username", userController.getUserByUsername);
+router.get("/getuserbyusername/", userController.getUserByUsername);
 
-router.put("/update/:user_id", userController.updatedUser);
-router.put("/update", userController.updatedUser);
+// router.put("/update/:user_id", userController.updatedUser);
+// router.put("/update", userController.updatedUser);
 
-router.delete("/delete_user/:user_id", userController.deleteUser);
-router.delete("/delete_user/", userController.deleteUser);
+// router.delete("/delete_user/:user_id", userController.deleteUser);
+// router.delete("/delete_user/", userController.deleteUser);
 
 module.exports = router;

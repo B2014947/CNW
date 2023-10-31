@@ -24,20 +24,15 @@ async function createUser(userData, userDetailsData) {
   try {
     transaction = await knex.transaction();
 
+    // Tạo người dùng và lấy ID
     const [userId] = await transaction("users").insert(userData);
     userDetailsData.UserID = userId;
-    const [userDetailsId] = await transaction("userdetails").insert(
-      userDetailsData
-    );
+
+    await transaction("userdetails").insert(userDetailsData);
 
     await transaction.commit();
 
-    return {
-      userId,
-      userDetailsId,
-      ...userData,
-      ...userDetailsData,
-    };
+    return { userData, userDetailsData };
   } catch (error) {
     if (transaction) {
       await transaction.rollback();
@@ -46,14 +41,16 @@ async function createUser(userData, userDetailsData) {
   }
 }
 
-// get user by ID
-async function getUserById(userId) {
+// get user by username
+async function getUserByUsername(username) {
   try {
-    const user = await knex("users")
-      .select("*")
-      .where("user_id", userId)
-      .first();
-    return user;
+    const user = await knex("users").where("username", username).first();
+
+    if (user) {
+      return user;
+    } else {
+      throw new Error("User not found");
+    }
   } catch (error) {
     throw error;
   }
@@ -69,34 +66,34 @@ async function getusers() {
   }
 }
 
-// update user
-async function updateUser(userId, updatedData) {
-  try {
-    await knex("users").where("user_id", userId).update(updatedData);
-    const updatedUser = await knex("users")
-      .select("*")
-      .where("user_id", userId)
-      .first();
-    return updatedUser;
-  } catch (error) {
-    throw error;
-  }
-}
+// // update user
+// async function updateUser(userId, updatedData) {
+//   try {
+//     await knex("users").where("user_id", userId).update(updatedData);
+//     const updatedUser = await knex("users")
+//       .select("*")
+//       .where("user_id", userId)
+//       .first();
+//     return updatedUser;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
-// delete with ID user
-async function deleteUser(userId) {
-  try {
-    await knex("users").where("user_id", userId).del();
-  } catch (error) {
-    throw error;
-  }
-}
+// // delete with ID user
+// async function deleteUser(userId) {
+//   try {
+//     await knex("users").where("user_id", userId).del();
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
 module.exports = {
   checkLogin,
   createUser,
-  getUserById,
+  getUserByUsername,
   getusers,
-  updateUser,
-  deleteUser,
+  // updateUser,
+  // deleteUser,
 };
