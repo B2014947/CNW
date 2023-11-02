@@ -24,6 +24,7 @@ async function createUser(userData, userDetailsData) {
   try {
     transaction = await knex.transaction();
     userData.StatusID = "1";
+
     // Tạo người dùng và lấy ID
     const [userId] = await transaction("users").insert(userData);
     userDetailsData.UserID = userId;
@@ -59,7 +60,10 @@ async function getUserByUsername(username) {
 // get all list user
 async function getusers() {
   try {
-    const users = await knex("users").select("*");
+    const users = await knex("users")
+      .select("users.*", "status.StatusName as StatusName")
+      .join("status", "users.StatusID", "status.StatusID");
+
     return users;
   } catch (error) {
     throw error;
