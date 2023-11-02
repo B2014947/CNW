@@ -31,7 +31,6 @@ export default defineComponent({
   setup() {
     useMenu().onSelectedKeys(["admin-users"]);
 
-    const users = ref([]);
     const columns = [
       {
         title: "No.",
@@ -64,6 +63,7 @@ export default defineComponent({
       return moment(datetime).format("DD/MM/YYYY (HH:mm)"); // Định dạng theo định dạng "18/12/2023 (23:00)"
     };
 
+    const users = ref([]);
     const getUsers = () => {
       axios
         .get("http://localhost:3000/api/users/getusers")
