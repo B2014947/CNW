@@ -47,6 +47,12 @@ export default defineComponent({
         dataIndex: "Password",
         key: "passwd",
       },
+
+      {
+        title: "Status",
+        dataIndex: "Status",
+        key: "status",
+      },
       {
         title: "RegistrationDate",
         dataIndex: "RegistrationDate",
