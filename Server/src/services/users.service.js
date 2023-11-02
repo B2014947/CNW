@@ -8,10 +8,12 @@ async function checkLogin(username, passwd) {
       .where("username", username)
       .andWhere("password", passwd)
       .first();
-    if (!user) {
-      return null;
+    if (user) {
+      console.log(`Đăng nhập thành công người dùng với username: ${username}`);
+      return user || null;
+    } else {
+      console.log(`Sai thông tin đăng nhập: ${username} hoặc ${passwd}`);
     }
-    return user;
   } catch (error) {
     throw error;
   }
@@ -32,8 +34,13 @@ async function createUser(userData, userDetailsData) {
     await transaction("userdetails").insert(userDetailsData);
 
     await transaction.commit();
-
-    return { userData, userDetailsData };
+    console.log("Đã tạo thành công người dùng gồm thông tin như sau:", [
+      [userData, userDetailsData],
+    ]);
+    return {
+      userData,
+      userDetailsData,
+    };
   } catch (error) {
     if (transaction) {
       await transaction.rollback();
@@ -46,11 +53,11 @@ async function createUser(userData, userDetailsData) {
 async function getUserByUsername(username) {
   try {
     const user = await knex("users").where("username", username).first();
-
     if (user) {
+      console.log(`Thông tin người dùng có username: ${username}`, [user]);
       return user;
     } else {
-      throw new Error("User not found");
+      console.log(`Người dùng có username: ${username} không tồn tại`);
     }
   } catch (error) {
     throw error;
@@ -61,35 +68,48 @@ async function getUserByUsername(username) {
 async function getusers() {
   try {
     const users = await knex("users")
+      // join feild StatusName by StatusID
       .select("users.*", "status.StatusName as StatusName")
       .join("status", "users.StatusID", "status.StatusID");
-
+    console.log("Lấy danh sách người dùng thành công:");
+    console.log([users]);
     return users;
   } catch (error) {
+    console.log("Lỗi trong quá trình lấy danh sách người dùng:", error);
     throw error;
   }
 }
 
-// // update user
-// async function updateUser(userId, updatedData) {
-//   try {
-//     await knex("users").where("user_id", userId).update(updatedData);
-//     const updatedUser = await knex("users")
-//       .select("*")
-//       .where("user_id", userId)
-//       .first();
-//     return updatedUser;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+// update user
+async function updateUser(userData, userDetailsData, userRolesData) {}
 
-// delete with ID user
-async function deleteUser(userId) {
+// delete with username
+async function deleteUser(username) {
+  let transaction;
   try {
-    await knex("userdetails").where(user_id).del();
-    await knex("users").where("user_id", userId).del();
+    transaction = await knex.transaction();
+
+    const user = await transaction("users").where("Username", username).first();
+    if (!user) {
+      console.log("Người dùng không tồn tại");
+      await transaction.rollback();
+      return null;
+    }
+
+    const userId = user.UserID;
+
+    await transaction("userroles").where("UserID", userId).del();
+    await transaction("userdetails").where("UserID", userId).del();
+    await transaction("users").where("UserID", userId).del();
+
+    await transaction.commit();
+    console.log("Xóa người dùng thành công");
+    return username;
   } catch (error) {
+    if (transaction) {
+      await transaction.rollback();
+      console.log("Lỗi trong quá trình xóa người dùng:", error);
+    }
     throw error;
   }
 }
@@ -99,6 +119,6 @@ module.exports = {
   createUser,
   getUserByUsername,
   getusers,
-  // updateUser,
+  updateUser,
   deleteUser,
 };

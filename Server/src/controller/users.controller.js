@@ -58,11 +58,12 @@ async function createUser(req, res, next) {
 
 async function getUserByUsername(req, res, next) {
   const username = req.params.username;
+
   try {
     const user = await userService.getUserByUsername(username);
 
     if (user) {
-      return res.send(user);
+      return res.json(user);
     } else {
       return res.status(404).json({ message: "User not found" });
     }
@@ -74,68 +75,65 @@ async function getUserByUsername(req, res, next) {
 
 async function getUsers(req, res, next) {
   try {
-    const user = await userService.getusers(req.query);
-    return res.send(user);
+    const user = await userService.getusers();
+    return res.json(user);
   } catch (error) {
     console.log(error);
     return next(new ApiError(500, "An error occurred while fetching users"));
   }
 }
 
-// async function updatedUser(req, res, next) {
-//   const user_id = req.params.user_id || req.body.user_id;
+async function updatedUser(req, res, next) {
+  const user_id = req.params.user_id || req.body.user_id;
 
-//   if (!user_id) {
-//     return next(new ApiError(400, "ID user can not be empty!"));
-//   }
+  if (!user_id) {
+    return next(new ApiError(400, "ID user can not be empty!"));
+  }
 
-//   try {
-//     const updatedUser = await userService.updateUser(user_id, req.body);
-//     if (!updatedUser) {
-//       return next(new ApiError(404, `ID user ${user_id} dose not exist!`));
-//     }
-//     return res.send(updatedUser);
-//   } catch (error) {
-//     console.log(error);
-//     return next(
-//       new ApiError(
-//         500,
-//         `An error occurred while updating user with ID user is ${user_id}`
-//       )
-//     );
-//   }
-// }
+  try {
+    const updatedUser = await userService.updateUser(user_id, req.body);
+    if (!updatedUser) {
+      return next(new ApiError(404, `ID user ${user_id} dose not exist!`));
+    }
+    return res.send(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return next(
+      new ApiError(
+        500,
+        `An error occurred while updating user with ID user is ${user_id}`
+      )
+    );
+  }
+}
 
-// async function deleteUser(req, res, next) {
-//   const user_id = req.params.user_id || req.body.user_id;
-//   if (!user_id) {
-//     return next(new ApiError(400, "ID user can not be empty!"));
-//   }
-//   try {
-//     const checkID_user = await userService.getUserById(user_id);
-//     if (checkID_user) {
-//       await userService.deleteUser(user_id);
-//       return res.json({
-//         message: `Deleted user whose ID is: ${user_id} success`,
-//       });
-//     }
-//     return next(new ApiError(404, `ID user: ${user_id} does not exist!`));
-//   } catch (error) {
-//     console.log(error);
-//     return next(
-//       new ApiError(
-//         500,
-//         `An error occurred while delete user with ID user is ${user_id}`
-//       )
-//     );
-//   }
-// }
+async function deleteUser(req, res, next) {
+  const username = req.body.username || req.params.username;
+  try {
+    const delete_user = await userService.deleteUser(username);
+    if (delete_user) {
+      return res.json({
+        message: `Delete success user with username: ${username}`,
+      });
+    } else {
+      return next(new ApiError(404, `username: ${username} does not exist`));
+    }
+  } catch (error) {
+    console.log(error);
+    return next(
+      new ApiError(
+        500,
+        `An error occurred while deleting user with username: ${username}`
+      )
+    );
+  }
+}
 
 module.exports = {
   checkuserlogin,
   createUser,
   getUsers,
   getUserByUsername,
-  // updatedUser,
-  // deleteUser,
+  updatedUser,
+  deleteUser,
 };
