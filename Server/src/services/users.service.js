@@ -23,7 +23,7 @@ async function createUser(userData, userDetailsData) {
 
   try {
     transaction = await knex.transaction();
-    userData.status = "Đang hoạt động";
+    userData.StatusID = "1";
     // Tạo người dùng và lấy ID
     const [userId] = await transaction("users").insert(userData);
     userDetailsData.UserID = userId;
