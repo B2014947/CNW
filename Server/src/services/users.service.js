@@ -84,14 +84,15 @@ async function getusers() {
 //   }
 // }
 
-// // delete with ID user
-// async function deleteUser(userId) {
-//   try {
-//     await knex("users").where("user_id", userId).del();
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+// delete with ID user
+async function deleteUser(userId) {
+  try {
+    await knex("userdetails").where(user_id).del();
+    await knex("users").where("user_id", userId).del();
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
   checkLogin,
@@ -99,5 +100,5 @@ module.exports = {
   getUserByUsername,
   getusers,
   // updateUser,
-  // deleteUser,
+  deleteUser,
 };
