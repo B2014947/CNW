@@ -1,7 +1,7 @@
 const userService = require("../services/users.service");
 const ApiError = require("../api-error");
 
-//inf login
+//check info login
 async function checkuserlogin(req, res, next) {
   const username = req.body.username;
   const passwd = req.body.password;
