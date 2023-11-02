@@ -50,7 +50,7 @@ export default defineComponent({
 
       {
         title: "Status",
-        dataIndex: "Status",
+        dataIndex: "StatusID",
         key: "status",
       },
       {
