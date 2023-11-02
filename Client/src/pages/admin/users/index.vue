@@ -4,9 +4,29 @@
       <div class="row">
         <div class="col-12">
           <a-table :dataSource="users" :columns="columns">
-            <template #bodyCell="{ column, index, text }">
+            <template #bodyCell="{ column, index, record, text }">
               <template v-if="column.key === 'index'">
                 <span>{{ index + 1 }}</span>
+              </template>
+
+              <template v-else-if="column.key === 'status'">
+                <span v-if="record.StatusID == 1" class="text-success">{{
+                  record.StatusName
+                }}</span>
+                <span v-if="record.StatusID == 2" class="text-warning">{{
+                  record.StatusName
+                }}</span>
+                <span v-if="record.StatusID == 3" class="text-danger">{{
+                  record.StatusName
+                }}</span>
+              </template>
+
+              <template v-else-if="column.key === 'tools'">
+                <span>
+                  <button>
+                    <font-awesome-icon icon="trash" style="color: #ff2e2e" />
+                  </button>
+                </span>
               </template>
               <template v-else-if="column.key === 'RegistrationDate'">
                 <span>{{ formatDatetime(text) }}</span>
@@ -56,6 +76,12 @@ export default defineComponent({
         title: "RegistrationDate",
         dataIndex: "RegistrationDate",
         key: "RegistrationDate",
+      },
+
+      {
+        title: "Tools",
+        dataIndex: "",
+        key: "tools",
       },
     ];
 
