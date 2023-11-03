@@ -28,6 +28,7 @@
                   </button>
                 </span>
               </template>
+
               <template v-else-if="column.key === 'RegistrationDate'">
                 <span>{{ formatDatetime(text) }}</span>
               </template>
@@ -56,11 +57,13 @@ export default defineComponent({
         title: "No.",
         key: "index",
       },
+
       {
         title: "Username",
         dataIndex: "Username",
         key: "name",
       },
+
       {
         title: "Password",
         dataIndex: "Password",
@@ -72,6 +75,7 @@ export default defineComponent({
         dataIndex: "StatusID",
         key: "status",
       },
+
       {
         title: "RegistrationDate",
         dataIndex: "RegistrationDate",
