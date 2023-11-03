@@ -4,6 +4,7 @@ const homepage = [
     path: "/",
     name: "Homepage",
     component: () => import("../pages/users/homepage.vue"),
+    meta: { title: "Shineonyou" },
   },
 ];
 
