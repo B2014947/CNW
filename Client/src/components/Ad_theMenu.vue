@@ -28,7 +28,7 @@ import { useMenu } from "../stores/use-menu";
 import { storeToRefs } from "pinia";
 export default defineComponent({
   setup() {
-    const stores = useMenu;
+    const stores = useMenu();
     return {
       ...storeToRefs(stores),
     };
