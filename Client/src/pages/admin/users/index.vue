@@ -96,7 +96,7 @@ export default defineComponent({
     const users = ref([]);
     const getUsers = () => {
       axios
-        .get("http://localhost:3000/api/users/getusers")
+        .get("http://localhost:3000/api/users/getusers?page=")
         .then(function (response) {
           users.value = response.data;
         })
