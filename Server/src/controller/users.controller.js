@@ -73,6 +73,7 @@ async function getUserByUsername(req, res, next) {
   }
 }
 
+//
 async function getUsers(req, res, next) {
   try {
     const page = parseInt(req.query.page) || 1;
