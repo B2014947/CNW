@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router/index";
 import axios from "axios";
 window.axios = axios;
-import { List, Menu, Card, Table } from "ant-design-vue";
+import { List, Menu, Card, Table, Pagination } from "ant-design-vue";
 import { createPinia } from "pinia";
 
 import "bootstrap/dist/css/bootstrap-grid.min.css";
@@ -24,5 +24,6 @@ app.use(List);
 app.use(Menu);
 app.use(Card);
 app.use(Table);
+app.use(Pagination);
 app.use(createPinia());
 app.mount("#app");
