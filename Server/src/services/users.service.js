@@ -65,12 +65,16 @@ async function getUserByUsername(username) {
 }
 
 // get all list user
-async function getusers() {
+async function getusers(page) {
   try {
+    const itemsPerPage = 5;
+    const offset = (page - 1) * itemsPerPage;
     const users = await knex("users")
       // join feild StatusName by StatusID
       .select("users.*", "status.StatusName as StatusName")
-      .join("status", "users.StatusID", "status.StatusID");
+      .join("status", "users.StatusID", "status.StatusID")
+      .limit(itemsPerPage)
+      .offset(offset); // data skip
     console.log("Lấy danh sách người dùng thành công:");
     console.log([users]);
     return users;

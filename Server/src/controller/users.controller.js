@@ -75,8 +75,9 @@ async function getUserByUsername(req, res, next) {
 
 async function getUsers(req, res, next) {
   try {
-    const user = await userService.getusers();
-    return res.json(user);
+    const page = parseInt(req.query.page) || 1;
+    const users = await userService.getusers(page);
+    return res.json(users);
   } catch (error) {
     console.log(error);
     return next(new ApiError(500, "An error occurred while fetching users"));
