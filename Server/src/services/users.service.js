@@ -9,10 +9,10 @@ async function checkLogin(username, passwd) {
       .andWhere("password", passwd)
       .first();
     if (user) {
-      console.log(`Đăng nhập thành công người dùng với username: ${username}`);
+      console.log(`Login success with username: ${username}`);
       return user || null;
     } else {
-      console.log(`Sai thông tin đăng nhập: ${username} hoặc ${passwd}`);
+      console.log(`${username} or ${passwd} incorrect`);
     }
   } catch (error) {
     throw error;
@@ -34,7 +34,7 @@ async function createUser(userData, userDetailsData) {
     await transaction("userdetails").insert(userDetailsData);
 
     await transaction.commit();
-    console.log("Đã tạo thành công người dùng gồm thông tin như sau:", [
+    console.log("create user success with data:", [
       [userData, userDetailsData],
     ]);
     return {
@@ -54,10 +54,10 @@ async function getUserByUsername(username) {
   try {
     const user = await knex("users").where("username", username).first();
     if (user) {
-      console.log(`Thông tin người dùng có username: ${username}`, [user]);
+      console.log(`Information with username: ${username} are`, [user]);
       return user;
     } else {
-      console.log(`Người dùng có username: ${username} không tồn tại`);
+      console.log(`${username} does not exist`);
     }
   } catch (error) {
     throw error;
@@ -75,11 +75,11 @@ async function getusers(page) {
       .join("status", "users.StatusID", "status.StatusID")
       .limit(itemsPerPage)
       .offset(offset); // data skip
-    console.log("Lấy danh sách người dùng thành công:");
+    console.log("Get list user success:");
     console.log([users]);
     return users;
   } catch (error) {
-    console.log("Lỗi trong quá trình lấy danh sách người dùng:", error);
+    console.log("Get list user fail", error);
     throw error;
   }
 }
@@ -95,7 +95,7 @@ async function deleteUser(username) {
 
     const user = await transaction("users").where("Username", username).first();
     if (!user) {
-      console.log("Người dùng không tồn tại");
+      console.log("Username does not exist");
       await transaction.rollback();
       return null;
     }
@@ -107,12 +107,12 @@ async function deleteUser(username) {
     await transaction("users").where("UserID", userId).del();
 
     await transaction.commit();
-    console.log("Xóa người dùng thành công");
+    console.log(`Delete user with ${username} success`);
     return username;
   } catch (error) {
     if (transaction) {
       await transaction.rollback();
-      console.log("Lỗi trong quá trình xóa người dùng:", error);
+      console.log("An error while deleting user", error);
     }
     throw error;
   }
