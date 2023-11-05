@@ -12,6 +12,8 @@ async function checkuserlogin(req, res, next) {
     return next(new ApiError(400, "Password can not be empty!"));
   }
   try {
+    console.log("Received data from client:", req.body);
+
     const checklogin = await userService.checkLogin(username, passwd);
     if (!checklogin) {
       return next(new ApiError(404, "Username or password does not exist!"));

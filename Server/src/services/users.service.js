@@ -1,18 +1,29 @@
 const knex = require("./knexConfig");
-
+const bcrypt = require("bcryptjs");
 // check_login
-async function checkLogin(username, passwd) {
+async function checkLogin(username, clientPassword) {
   try {
     const user = await knex("users")
       .select("*")
       .where("username", username)
-      .andWhere("password", passwd)
       .first();
+
     if (user) {
-      console.log(`Login success with username: ${username}`);
-      return user || null;
+      // Lấy salt từ cơ sở dữ liệu
+      const salt = user.salt;
+      console.log(salt);
+      // Hash mật khẩu gửi từ client sử dụng salt từ cơ sở dữ liệu
+      const hashedPassword = await bcrypt.hash(clientPassword, salt);
+      console.log(hashedPassword);
+      // So sánh mật khẩu đã băm từ client với mật khẩu băm trong cơ sở dữ liệu
+      if (hashedPassword === user.Password) {
+        console.log(`Login success with username: ${username}`);
+        return user;
+      } else {
+        console.log(`Incorrect password for username: ${username}`);
+      }
     } else {
-      console.log(`${username} or ${passwd} incorrect`);
+      console.log(`User with username ${username} not found`);
     }
   } catch (error) {
     throw error;
@@ -27,7 +38,11 @@ async function createUser(userData, userDetailsData) {
     transaction = await knex.transaction();
     userData.StatusID = "1";
 
-    // Tạo người dùng và lấy ID
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(userData.password, salt);
+    userData.password = hashedPassword;
+    userData.salt = salt;
     const [userId] = await transaction("users").insert(userData);
     userDetailsData.UserID = userId;
 
