@@ -3,7 +3,6 @@
     <a-form
       :model="formData"
       name="basic"
-      autocomplete="off"
       @finish="onSubmit"
       @finishFailed="onError"
     >
@@ -12,7 +11,10 @@
         name="username"
         :rules="[{ required: true, message: 'Please input your username!' }]"
       >
-        <a-input v-model:value="formData.username" />
+        <a-input
+          v-model:value="formData.username"
+          autocomplete="current-username"
+        />
       </a-form-item>
 
       <a-form-item
@@ -20,7 +22,10 @@
         name="password"
         :rules="[{ required: true, message: 'Please input your password!' }]"
       >
-        <a-input-password v-model:value="formData.password" />
+        <a-input-password
+          v-model:value="formData.password"
+          autocomplete="current-password"
+        />
       </a-form-item>
 
       <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
@@ -46,11 +51,19 @@ const formData = ref({
 });
 
 const onSubmit = async (_formData) => {
-  console.log("Form Submitted!:", _formData);
-  await fetch("https://some.api/process-form", {
-    method: "POST",
-    body: _formData,
-  });
+  try {
+    const response = await window.axios.post(
+      "http://localhost:3000/api/users/login",
+      _formData
+    );
+    if (response.status === 200) {
+      console.log("Login success");
+    } else {
+      console.log("Login failed");
+    }
+  } catch (error) {
+    console.error("An error occurred while logging in:", error);
+  }
 };
 
 const onError = (errorInfo) => {
