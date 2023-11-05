@@ -3,6 +3,7 @@ const admin = [
   {
     path: "/admin",
     component: () => import("../layouts/admin.vue"),
+    meta: { title: "Admin Page" },
     children: [
       {
         path: "users",
