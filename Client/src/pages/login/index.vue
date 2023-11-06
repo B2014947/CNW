@@ -1,74 +1,82 @@
 <template>
-  <div>
-    <a-form
-      :model="formData"
-      name="basic"
-      @finish="onSubmit"
-      @finishFailed="onError"
-    >
-      <a-form-item
-        label="Username"
-        name="username"
-        :rules="[{ required: true, message: 'Please input your username!' }]"
-      >
-        <a-input
-          v-model:value="formData.username"
+  <div class="lg-container">
+    <form @submit.prevent="onSubmit">
+      <h1>Log In</h1>
+      <div class="form-group">
+        <input
+          v-model="formData.username"
+          class="form-control"
+          placeholder="Email address or phone number"
           autocomplete="current-username"
         />
-      </a-form-item>
+      </div>
 
-      <a-form-item
-        label="Password"
-        name="password"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
-      >
-        <a-input-password
-          v-model:value="formData.password"
+      <div class="form-group">
+        <input
+          v-model="formData.password"
+          type="password"
+          class="form-control"
+          placeholder="Password"
           autocomplete="current-password"
         />
-      </a-form-item>
+      </div>
 
-      <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
-        <a-checkbox v-model:checked="formData.remember">
-          Remember me
-        </a-checkbox>
-      </a-form-item>
+      <div class="form-group">
+        <a href="#"> Forgotten password? </a>
+      </div>
 
-      <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-        <a-button type="primary" html-type="submit">Continue</a-button>
-      </a-form-item>
-    </a-form>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Log in</button>
+      </div>
+
+      <div class="form-group">
+        <p>
+          Don't have an account?
+          <router-link to="/login-page/sign-up">
+            <a href="#">Register here for free!</a></router-link
+          >
+        </p>
+      </div>
+    </form>
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script>
 import { useRouter } from "vue-router";
-const router = useRouter();
-const formData = ref({
-  username: "",
-  password: "",
-  remember: true,
-});
+import { ref } from "vue";
 
-const onSubmit = async (_formData) => {
-  try {
-    const response = await window.axios.post(
-      "http://localhost:3000/api/users/login",
-      _formData
-    );
-    if (response.status === 200) {
-      router.push("/");
-      console.log("Login success");
-    } else {
-      console.log("Login failed");
-    }
-  } catch (error) {
-    console.error("An error occurred while logging in:", error);
-  }
-};
+export default {
+  setup() {
+    const router = useRouter();
+    const formData = ref({
+      username: "",
+      password: "",
+    });
 
-const onError = (errorInfo) => {
-  console.log("Failed:", errorInfo);
+    const onSubmit = async () => {
+      try {
+        const response = await window.axios.post(
+          "http://localhost:3000/api/users/login",
+          formData.value
+        );
+        if (response.status === 200) {
+          router.push("/");
+          console.log("Login success");
+        } else {
+          console.log("Login failed");
+        }
+      } catch (error) {
+        console.error("An error occurred while logging in:", error);
+      }
+    };
+
+    return {
+      formData,
+      onSubmit,
+    };
+  },
 };
 </script>
+<style scoped>
+@import url("@/assets/Login/login.css");
+</style>
