@@ -43,7 +43,8 @@
 
 <script setup>
 import { ref } from "vue";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const formData = ref({
   username: "",
   password: "",
@@ -57,6 +58,7 @@ const onSubmit = async (_formData) => {
       _formData
     );
     if (response.status === 200) {
+      router.push("/");
       console.log("Login success");
     } else {
       console.log("Login failed");
